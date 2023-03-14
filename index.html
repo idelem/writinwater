@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>writ in water</title>
+        <base href="/" target="_top">
+        <style type="text/css">
+            :root {
+                --page-color: #171717;
+                --text-color: #cccccc;
+                --mark-color: #47ebc8;
+                --grid-color: #282828;
+            }
+            :focus {
+                outline: 0;
+            }
+            body {
+                height: 100vh;
+                margin: 0;
+                background: var(--page-color);
+                color: var(--text-color);
+                position: relative;
+                font-family: "inconsolata", monospace;
+            }
+            a {
+                color: var(--mark-color);
+                text-decoration: none;
+            }
+            .wrapper {
+                margin: auto;
+                width: 60vw;
+                position: relative;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div id="auth">
+                <a href="https://github.com/login/oauth/authorize?client_id=22885b3bab10b44086a2">log in with github</a>
+            </div>
+            <div id="content"></div>
+        </div>
+    </body>
+    <script>
+
+    </script>
+</html>
