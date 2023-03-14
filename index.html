@@ -44,6 +44,9 @@
         </div>
     </body>
     <script>
-
+        var token = localStorage.getItem("wiw_token");
+        if(token != null) {
+            document.getElementById("content").innerText = token;
+        }
     </script>
 </html>

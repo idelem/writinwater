@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html><head><title>writ in water</title></head>
+    <body>
+        <p id="message"></p>
+        <a href="/">ok</a>
+    </body>
+    <script>
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+        });
+        let code = params.code;
+        fetch(`http://localhost:8080/?client_id=22885b3bab10b44086a2&code=${code}`).then(res => res.json().then(data => {localStorage.setItem("wiw_token", data.accessToken); document.getElementById("message").innerText = data.accessToken; }));
+        // console.log(code);
+    </script>
+</html>
