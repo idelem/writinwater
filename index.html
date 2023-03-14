@@ -44,9 +44,14 @@
         </div>
     </body>
     <script>
+        var data = {};
+        fetch('./data.json')
+            .then(res => res.json()
+            .then(json => {data = json; document.getElementById("content").innerText += `\n${JSON.stringify(data)}`;}));
         var token = localStorage.getItem("wiw_token");
         if(token != null) {
             document.getElementById("content").innerText = token;
         }
+        
     </script>
 </html>
