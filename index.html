@@ -27,12 +27,19 @@
                 text-decoration: none;
                 cursor: pointer;
             }
+            .hidden {
+                display: none;
+            }
             .wrapper {
                 margin: auto;
                 width: 60vw;
                 position: relative;
                 top: 50%;
                 transform: translateY(-50%);
+            }
+            #auth {
+                display: flex;
+                gap: 2em;
             }
         </style>
     </head>
@@ -44,18 +51,42 @@
     </body>
     <script>
         const auth_el = document.getElementById("auth");
+        const content_el = document.getElementById('content');
         const login_el = document.createElement('div');
         login_el.innerHTML = `<a href="https://github.com/login/oauth/authorize?client_id=22885b3bab10b44086a2">log in with github</a>`;
         const logout_el = document.createElement('div');
-        logout_el.innerHTML = `<div class="a">log out</div>`;
+        logout_el.innerHTML = `log out`;
+        logout_el.classList.add('a');
         logout_el.onclick = logout;
         const save_el = document.createElement('div');
+        save_el.innerHTML = `save`;
+        save_el.classList.add('a');
+        save_el.classList.add('hidden');
 
         var old_data = {};
         var data = {};
         fetch('https://idelem.github.io/writinwater/data.json')
             .then(res => res.json()
             .then(json => {data = json; old_data = json; mount(); }));
+
+
+        const entries = [];
+
+        function check_dirty () {
+            var dirty = false;
+            entries.map(e => {dirty |= e.is_dirty()});
+            if (dirty) save_el.classList.remove('hidden');
+            else save_el.classList.add('hidden');
+        }
+
+        const Entry = function ({el=null, text=""}) {
+            this.el = el;
+            this.text = text;
+            this.is_dirty = () => {return this.el.innerText != this.text;}
+            this.el.onkeydown = check_dirty;
+            this.el.onkeyup = check_dirty;
+            this.el.onblur = check_dirty;
+        }
 
         var token = localStorage.getItem("wiw_token");
         
@@ -72,6 +103,7 @@
         function login () {
             auth_el.innerHTML = '';
             auth_el.appendChild(logout_el);
+            auth_el.appendChild(save_el);
         }
         
         function logout () {
@@ -81,12 +113,14 @@
         }
 
         function mount () {
-            const content_el = document.getElementById('content');
             data.entries.forEach(element => {
                 var p_el = document.createElement('p');
                 p_el.innerText = element;
                 p_el.setAttribute("contentEditable", true);
                 content_el.appendChild(p_el);
+                
+                var entry = new Entry({el: p_el, text: element});
+                entries.push(entry);
             });
         }
         
