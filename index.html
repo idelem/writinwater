@@ -47,10 +47,20 @@
         var data = {};
         fetch('./data.json')
             .then(res => res.json()
-            .then(json => {data = json; document.getElementById("content").innerText += `\n${JSON.stringify(data)}`;}));
+            .then(json => {data = json; mount(); }));
         var token = localStorage.getItem("wiw_token");
         if(token != null) {
-            document.getElementById("content").innerText = token;
+            // document.getElementById("content").innerText = token;
+        }
+
+        function mount () {
+            const content_el = document.getElementById('content');
+            data.entries.forEach(element => {
+                var p_el = document.createElement('p');
+                p_el.innerText = element;
+                p_el.setAttribute("contentEditable", true);
+                content_el.appendChild(p_el);
+            });
         }
         
     </script>
