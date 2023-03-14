@@ -22,9 +22,10 @@
                 position: relative;
                 font-family: "inconsolata", monospace;
             }
-            a {
+            a, .a {
                 color: var(--mark-color);
                 text-decoration: none;
+                cursor: pointer;
             }
             .wrapper {
                 margin: auto;
@@ -37,20 +38,46 @@
     </head>
     <body>
         <div class="wrapper">
-            <div id="auth">
-                <a href="https://github.com/login/oauth/authorize?client_id=22885b3bab10b44086a2">log in with github</a>
-            </div>
+            <div id="auth"></div>
             <div id="content"></div>
         </div>
     </body>
     <script>
+        const auth_el = document.getElementById("auth");
+        const login_el = document.createElement('div');
+        login_el.innerHTML = `<a href="https://github.com/login/oauth/authorize?client_id=22885b3bab10b44086a2">log in with github</a>`;
+        const logout_el = document.createElement('div');
+        logout_el.innerHTML = `<div class="a">log out</div>`;
+        logout_el.onclick = logout;
+        const save_el = document.createElement('div');
+
+        var old_data = {};
         var data = {};
         fetch('https://idelem.github.io/writinwater/data.json')
             .then(res => res.json()
-            .then(json => {data = json; mount(); }));
+            .then(json => {data = json; old_data = json; mount(); }));
+
         var token = localStorage.getItem("wiw_token");
-        if(token != null) {
-            // document.getElementById("content").innerText = token;
+        
+        window.onload = () => {
+            if(token != null) {
+                login();
+                // document.getElementById("content").innerText = token;
+            }
+            else {
+                logout();
+            }
+        }
+
+        function login () {
+            auth_el.innerHTML = '';
+            auth_el.appendChild(logout_el);
+        }
+        
+        function logout () {
+            localStorage.removeItem("wiw_token");
+            auth_el.innerHTML = '';
+            auth_el.appendChild(login_el);
         }
 
         function mount () {
