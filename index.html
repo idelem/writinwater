@@ -45,7 +45,7 @@
     </body>
     <script>
         var data = {};
-        fetch('./data.json')
+        fetch('data.json')
             .then(res => res.json()
             .then(json => {data = json; mount(); }));
         var token = localStorage.getItem("wiw_token");
