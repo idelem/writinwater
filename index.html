@@ -53,7 +53,7 @@
         const auth_el = document.getElementById("auth");
         const content_el = document.getElementById('content');
         const login_el = document.createElement('div');
-        login_el.innerHTML = `<a href="https://github.com/login/oauth/authorize?client_id=22885b3bab10b44086a2">log in with github</a>`;
+        login_el.innerHTML = `<a href="https://github.com/login/oauth/authorize?client_id=22885b3bab10b44086a2&scope=public_repo">log in with github</a>`;
         const logout_el = document.createElement('div');
         logout_el.innerHTML = `log out`;
         logout_el.classList.add('a');
@@ -123,6 +123,48 @@
                 entries.push(entry);
             });
         }
+
+        function commit() {
+            if (!token) {
+                console.error("No auth token available");
+                return;
+            }
+
+            const updatedData = {
+                entries: entries.map(entry => entry.el.innerText)
+            };
+
+            fetch('https://api.github.com/repos/idelem/writinwater/contents/data.json', {
+                headers: { 'Authorization': `token ${token}` }
+            })
+            .then(response => response.json())
+            .then(metadata => {
+                // Update the requestOptions object with the correct sha value
+                console.log(token);
+                const requestOptions = {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: 'Update data.json',
+                        content: btoa(JSON.stringify(updatedData)),
+                        sha: metadata.sha
+                    })
+                };
+
+                // Make the request to update the file
+                fetch('https://api.github.com/repos/idelem/writinwater/contents/data.json', requestOptions)
+                    .then(response => response.json())
+                    .then(json => {
+                        old_data = json;
+                        data = json;
+                    })
+            })
+        }
+
+        save_el.onclick = commit;
         
     </script>
 </html>

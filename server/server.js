@@ -10,11 +10,12 @@ app.get("/", (req, res) => {
   const requestToken = req.query.code;
   axios({
     method: "post",
-    url: `https://github.com/login/oauth/access_token?client_id=${env.clientID}&client_secret=${env.clientSecret}&code=${requestToken}`,
+    url: `https://github.com/login/oauth/access_token?client_id=${env.clientID}&client_secret=${env.clientSecret}&code=${requestToken}&scope=public_repo`,
     headers: {
       accept: "application/json",
     },
   }).then((response) => {
+    console.log(response);
     const accessToken = response.data.access_token;
     res.send({accessToken: accessToken});
   });
